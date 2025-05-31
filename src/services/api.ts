@@ -1,18 +1,17 @@
-import axios from 'axios';
-import { ENDPOINTS } from '../config';
+// Hardcoded values for the frontend demo
+// All API calls are replaced with mock data
 
-// Service for interacting with the Age Verification API
+// Service for interacting with Age Verification functionality
 export const apiService = {
   // Check if user is verified (has NFT)
   verifyAge: async (walletAddress: string) => {
     try {
-      // For now, we're mocking the verification by just returning true
-      // In a real implementation, this would call the backend
-      return { success: true, isVerified: true };
-      
-      // TODO: Replace with actual API call when backend is ready
-      // const response = await axios.post(ENDPOINTS.VERIFY_AGE, { address: walletAddress });
-      // return response.data;
+      // Simply return successful verification
+      return { 
+        success: true, 
+        isVerified: true,
+        message: "Age successfully verified" 
+      };
     } catch (error) {
       console.error('Error verifying age:', error);
       throw error;
@@ -22,8 +21,16 @@ export const apiService = {
   // Get demo wallet for testing
   getDemoWallet: async () => {
     try {
-      const response = await axios.get(ENDPOINTS.DEMO_WALLET);
-      return response.data;
+      // Return a hardcoded wallet address
+      return {
+        demoNote: "This is a demo wallet for testing",
+        walletAddress: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+        contracts: {
+          AGE_VERIFICATION_NFT: "0xd542B1ab9DD7065CC66ded19CE3dA42d41d8B15C",
+          PROVER: "0x1670276ab1398f62848cf8d63c00061130ffb93f", 
+          VERIFIER: "0xadc19d3b918f76259f631353614a81f390173b16"
+        }
+      };
     } catch (error) {
       console.error('Error getting demo wallet:', error);
       throw error;
@@ -33,8 +40,29 @@ export const apiService = {
   // Get NFC proof for private verification
   getNfcProof: async () => {
     try {
-      const response = await axios.get(ENDPOINTS.NFC_PROOF);
-      return response.data;
+      // Return hardcoded proof data
+      return {
+        privacyNote: "This proof is designed to be transmitted via NFC without revealing the user's wallet address",
+        verificationProof: {
+          proofData: {
+            seal: {
+              verifierSelector: "0x12345678",
+              seal: Array(8).fill("0x0000000000000000000000000000000000000000000000000000000000000000"),
+              mode: 0
+            },
+            length: "1",
+            callAssumptions: {
+              proverContractAddress: "0x1670276ab1398f62848cf8d63c00061130ffb93f",
+              functionSelector: "0x12345678",
+              settleChainId: "0x0000000000000000000000000000000000000000000000000000000000000001",
+              settleBlockNumber: "0x0000000000000000000000000000000000000000000000000000000000000001",
+              settleBlockHash: "0x0000000000000000000000000000000000000000000000000000000000000001"
+            }
+          },
+          isVerified: true,
+          timestamp: new Date().toISOString()
+        }
+      };
     } catch (error) {
       console.error('Error getting NFC proof:', error);
       throw error;
@@ -42,14 +70,21 @@ export const apiService = {
   },
   
   // Mock function to mint NFT
-  // In a real implementation, this would interact with the contract
   mintAgeVerificationNFT: async (walletAddress: string) => {
     try {
+      // Generate a random transaction hash
+      const txHash = "0x" + Array.from({length: 64}, () => 
+        Math.floor(Math.random() * 16).toString(16)
+      ).join('');
+      
       // Simulate minting by returning success
       return { 
         success: true, 
         message: "NFT minted successfully", 
-        txHash: "0x" + Math.random().toString(16).substr(2, 64) 
+        txHash: txHash,
+        walletAddress: walletAddress,
+        tokenId: Math.floor(Math.random() * 10000),
+        contractAddress: "0xd542B1ab9DD7065CC66ded19CE3dA42d41d8B15C"
       };
     } catch (error) {
       console.error('Error minting NFT:', error);

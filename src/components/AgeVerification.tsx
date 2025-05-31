@@ -8,6 +8,7 @@ interface AgeVerificationProps {
 }
 
 const AgeVerification = ({ walletAddress, provider }: AgeVerificationProps) => {
+  console.log(walletAddress, provider);
   const [loading, setLoading] = useState(false);
   const [verified, setVerified] = useState(false);
   const [nftMinted, setNftMinted] = useState(false);
